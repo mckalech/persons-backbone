@@ -53,7 +53,7 @@
 
 	$(function(){
 		const router = new Router();
-		Backbone.history.start();
+		Backbone.history.start({pushState:true});
 	});
 
 /***/ },
@@ -13093,6 +13093,17 @@
 		initialize: function(){
 			this.state = new AppStateModel();
 			this.personsCollection = new PersonsCollection(personsJson);
+	        Backbone.on('itemClick', function(id){
+	            this.navigate("person/"+id, {trigger:true});
+	        },this);
+
+	        Backbone.on('prevClick', function(){
+	            this.navigate("prev", {trigger:true});
+	        },this);
+
+	        Backbone.on('nextClick', function(){
+	            this.navigate("next", {trigger:true});
+	        },this);
 		},
 	    routes: {
 			"": "index",
@@ -13111,7 +13122,7 @@
 		    	this.state.set('currentPersonId', id)
 		    	this.renderAll();	
 	    	}else{
-	    		this.navigate("404", {trigger:true});
+	    		this.navigate("404", {trigger:true, replace:true});
 	    	}
 	    	
 	    },
@@ -13119,7 +13130,7 @@
 	    	var nextId = parseInt(this.state.get('currentPersonId')) + 1;
 	    	var nextPerson = this.personsCollection.get(nextId);
 	    	if(nextPerson){
-	    		this.navigate("#/person/"+nextId, {trigger:true});
+	    		this.navigate("person/"+nextId, {trigger:true, replace:true});
 	    	}else{
 	    		Backbone.history.history.back()
 	    	}
@@ -13128,7 +13139,7 @@
 	    	var prevId = parseInt(this.state.get('currentPersonId')) - 1;
 	    	var prevPerson = this.personsCollection.get(prevId);
 	    	if(prevPerson){
-	    		this.navigate("#/person/"+prevId, {trigger:true});
+	    		this.navigate("person/"+prevId, {trigger:true, replace:true});
 	    	}else{
 	    		Backbone.history.history.back()
 	    	}
@@ -14090,6 +14101,23 @@
 		initialize:function(options){
 			this.currendId = options.currendId;
 		},
+		events:{
+			'click li a': 'itemClick',
+			'click .b-navigate__prev': 'prevClick',
+			'click .b-navigate__next': 'nextClick'
+		},
+		itemClick:function(e){
+			e.preventDefault();
+			Backbone.trigger('itemClick', $(e.currentTarget).parent().data('id'));
+		},
+		prevClick:function(e){
+			e.preventDefault();
+			Backbone.trigger('prevClick');
+		},
+		nextClick:function(e){
+			e.preventDefault();
+			Backbone.trigger('nextClick');
+		},
 		render:function(){
 			this.$el.html('');
 			var $html = template({persons:this.collection.toJSON(), currendId: this.currendId});
@@ -14110,9 +14138,9 @@
 
 	  return "			<li "
 	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.active : depth0),{"name":"if","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + ">\n				<a href=\"/#/person/"
+	    + " data-id="
 	    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
-	    + "\">\n					<span>"
+	    + ">\n				<a href=\"#\">\n					<span>"
 	    + alias2(alias1((depth0 != null ? depth0.first_name : depth0), depth0))
 	    + "</span>\n					<span>"
 	    + alias2(alias1((depth0 != null ? depth0.age : depth0), depth0))
@@ -14124,9 +14152,9 @@
 
 	  return "<div class=\"b-list\">\n	<ul>\n"
 	    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.persons : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "	</ul>\n</div>\n<div class=\"b-navigate\">\n	<a href=\"#/prev\"><---</a>\n	<span>"
+	    + "	</ul>\n</div>\n<div class=\"b-navigate\">\n	<a class=\"b-navigate__prev\" href=\"#\"><---</a>\n	<span>"
 	    + this.escapeExpression(((helper = (helper = helpers.currendId || (depth0 != null ? depth0.currendId : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"currendId","hash":{},"data":data}) : helper)))
-	    + "</span>\n	<a href=\"#/next\">---></a>\n</div>";
+	    + "</span>\n	<a class=\"b-navigate__next\"  href=\"#\">---></a>\n</div>";
 	},"useData":true});
 
 /***/ }

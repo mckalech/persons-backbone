@@ -10,6 +10,17 @@ const Router = Backbone.Router.extend({
 	initialize: function(){
 		this.state = new AppStateModel();
 		this.personsCollection = new PersonsCollection(personsJson);
+        Backbone.on('itemClick', function(id){
+            this.navigate("person/"+id, {trigger:true});
+        },this);
+
+        Backbone.on('prevClick', function(){
+            this.navigate("prev", {trigger:true});
+        },this);
+
+        Backbone.on('nextClick', function(){
+            this.navigate("next", {trigger:true});
+        },this);
 	},
     routes: {
 		"": "index",
@@ -28,7 +39,7 @@ const Router = Backbone.Router.extend({
 	    	this.state.set('currentPersonId', id)
 	    	this.renderAll();	
     	}else{
-    		this.navigate("404", {trigger:true});
+    		this.navigate("404", {trigger:true, replace:true});
     	}
     	
     },
@@ -36,7 +47,7 @@ const Router = Backbone.Router.extend({
     	var nextId = parseInt(this.state.get('currentPersonId')) + 1;
     	var nextPerson = this.personsCollection.get(nextId);
     	if(nextPerson){
-    		this.navigate("#/person/"+nextId, {trigger:true});
+    		this.navigate("person/"+nextId, {trigger:true, replace:true});
     	}else{
     		Backbone.history.history.back()
     	}
@@ -45,7 +56,7 @@ const Router = Backbone.Router.extend({
     	var prevId = parseInt(this.state.get('currentPersonId')) - 1;
     	var prevPerson = this.personsCollection.get(prevId);
     	if(prevPerson){
-    		this.navigate("#/person/"+prevId, {trigger:true});
+    		this.navigate("person/"+prevId, {trigger:true, replace:true});
     	}else{
     		Backbone.history.history.back()
     	}

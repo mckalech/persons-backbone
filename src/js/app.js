@@ -7,5 +7,5 @@ const Router = require('./router');
 
 $(function(){
 	const router = new Router();
-	Backbone.history.start();
+	Backbone.history.start({pushState:true});
 });

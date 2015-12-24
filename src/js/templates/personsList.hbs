@@ -1,8 +1,8 @@
 <div class="b-list">
 	<ul>
 		{{#each persons}}
-			<li {{#if this.active}}class="active"{{/if}}>
-				<a href="/#/person/{{this.id}}">
+			<li {{#if this.active}}class="active"{{/if}} data-id={{this.id}}>
+				<a href="#">
 					<span>{{this.first_name}}</span>
 					<span>{{this.age}}</span>
 				</a>
@@ -11,7 +11,7 @@
 	</ul>
 </div>
 <div class="b-navigate">
-	<a href="#/prev"><---</a>
+	<a class="b-navigate__prev" href="#"><---</a>
 	<span>{{currendId}}</span>
-	<a href="#/next">---></a>
+	<a class="b-navigate__next"  href="#">---></a>
 </div>

@@ -2,10 +2,10 @@
   "name": "persons",
   "version": "1.0.0",
   "dependencies": {
-    "http-server": "latest"
+    "express": "latest"
   },
   "scripts": {
-    "start": "http-server"
+    "start": "node app.js"
   },
   "devDependencies": {
     "backbone": "latest",
